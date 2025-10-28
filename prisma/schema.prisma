@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model User{
+  id Int @id @default(autoincrement())
+  userName String
+  userEmail String @unique
+  createdAt DateTime @default(now())
+  booking Booking []
+} 
+
+model Experience{
+  id Int @id @default(autoincrement())
+  location String @unique
+  state String
+  description String
+  price Float
+  imageUrl String
+  slots Slot[]
+  createdAt DateTime @default(now())
+}
+
+model Slot{
+  id Int @id @default(autoincrement())
+  experienceId Int
+  experience Experience @relation(references: [id], fields: [experienceId])
+  bookedCount Int
+  date DateTime
+  capacity Int
+  booking Booking[]
+  createdAt DateTime @default(now())
+}
+
+model PromoCode{
+  id Int @id @default(autoincrement())
+  code String @unique
+  value Float
+  discountType String
+  minBookingValue Float
+  booking Booking []
+}
+
+model Booking{
+  id Int @id @default(autoincrement())
+  slotId Int
+  slot Slot @relation(references: [id], fields: [slotId])
+  userId Int
+  user User @relation(references: [id], fields: [userId])
+  promoCodeId Int?
+  promoCode PromoCode? @relation(references: [id], fields: [promoCodeId])
+  finalPrice Float
+  bookingDate DateTime @default(now())
+
+}
+
