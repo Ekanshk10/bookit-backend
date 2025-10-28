@@ -14,59 +14,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int       @id @default(autoincrement())
+  userName  String
+  userEmail String    @unique
+  createdAt DateTime  @default(now())
+  booking   Booking[]
+}
 
-
-model User{
-  id Int @id @default(autoincrement())
-  userName String
-  userEmail String @unique
-  createdAt DateTime @default(now())
-  booking Booking []
-} 
-
-model Experience{
-  id Int @id @default(autoincrement())
-  location String @unique
-  state String
+model Experience {
+  id          Int      @id @default(autoincrement())
+  location    String   @unique
+  state       String
   description String
-  price Float
-  imageUrl String
-  slots Slot[]
-  createdAt DateTime @default(now())
+  price       Float
+  imageUrl    String
+  slots       Slot[]
+  createdAt   DateTime @default(now())
 }
 
-model Slot{
-  id Int @id @default(autoincrement())
-  experienceId Int
-  experience Experience @relation(references: [id], fields: [experienceId])
-  date DateTime
+model Slot {
+  id             Int        @id @default(autoincrement())
+  experienceId   Int
+  experience     Experience @relation(references: [id], fields: [experienceId])
+  date           DateTime
   avaliableSlots Int
-  totalSlots Int @default(10)
-  booking Booking[]
-  createdAt DateTime @default(now())
+  totalSlots     Int        @default(10)
+  booking        Booking[]
+  createdAt      DateTime   @default(now())
 }
 
-model PromoCode{
-  id Int @id @default(autoincrement())
-  code String @unique
-  value Float
-  discountType String
+model PromoCode {
+  id              Int          @id @default(autoincrement())
+  code            String       @unique
+  amount          Float
+  discountType    DiscountType
   minBookingValue Float
-  booking Booking []
+  expiryDate      DateTime?
+  usageLimit      Int?
+  usedCount       Int
+  booking         Booking[]
 }
 
-model Booking{
-  id Int @id @default(autoincrement())
-  slotId Int
-  slot Slot @relation(references: [id], fields: [slotId])
-  userId Int
-  user User @relation(references: [id], fields: [userId])
+model Booking {
+  id          Int        @id @default(autoincrement())
+  slotId      Int
+  slot        Slot       @relation(references: [id], fields: [slotId])
+  userId      Int
+  user        User       @relation(references: [id], fields: [userId])
   promoCodeId Int?
-  promoCode PromoCode? @relation(references: [id], fields: [promoCodeId])
-  finalPrice Float
-  bookingDate DateTime @default(now())
+  promoCode   PromoCode? @relation(references: [id], fields: [promoCodeId])
+  finalPrice  Float
+  bookingDate DateTime   @default(now())
 
   @@unique([userId, slotId])
-
 }
 
+enum DiscountType {
+  PERCENTAGE
+  FLAT
+}

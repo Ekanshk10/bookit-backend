@@ -4,7 +4,7 @@ import "dotenv/config";
 import prisma from "./src/config/prisma.config.js";
 import experienceRoute from "./src/routes/experiences.route.js";
 // import bookingRoute from "./src/routes/booking.route.js";
-// import promoRoute from "./src/routes/promo.route.js";
+import promoRoute from "./src/routes/promo.route.js";
 const app = express();
 
 app.use(cors());
@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use("/api", experienceRoute);
 // app.use("/api", bookingRoute);
-// app.use("/api", promoRoute);
+app.use("/api", promoRoute);
 
 const PORT = process.env.PORT;
 
