@@ -1,21 +1,33 @@
-import  express  from "express";
-import cors from "cors"
+import express from "express";
+import cors from "cors";
 import "dotenv/config";
-import prisma from "./src/config/prisma.config.js"
-
+import prisma from "./src/config/prisma.config.js";
+import experienceRoute from "./src/routes/experiences.route.js";
+// import bookingRoute from "./src/routes/booking.route.js";
+// import promoRoute from "./src/routes/promo.route.js";
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT;
-app.listen(PORT, async()=>{
-    try{
-    await prisma.$connect();
-    console.log("DATABASE IS CONNECTED SUCCESSFULLY")
-    console.log("SERVER IS RUNNING ON PORT: ", PORT);
+app.use("/api", experienceRoute);
+// app.use("/api", bookingRoute);
+// app.use("/api", promoRoute);
 
-    }catch(error){
-        console.error("ERROR IN STARTING SERVER: ", error)
-    }
-})
+const PORT = process.env.PORT;
+
+const startServer = async () => {
+  try {
+    await prisma.$connect();
+    console.log("DATABASE IS CONNECTED SUCCESSFULLY");
+
+    app.listen(PORT, () => {
+      console.log("SERVER IS RUNNING ON PORT: ", PORT);
+    });
+  } catch (error) {
+    console.error("ERROR IN STARTING SERVER:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
