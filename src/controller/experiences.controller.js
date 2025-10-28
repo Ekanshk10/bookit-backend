@@ -25,7 +25,7 @@ export const getExperiences = async (req, res) => {
       .status(404)
       .json({message: "No Experiences found", data: [] });
   } catch (error) {
-    console.error("Server Side Error fetching experiences", error);
+    console.error("Server Side Error fetching experiences: ", error.message);
     return res
       .status(500)
       .json({message: "Error retrieving experiences." });
@@ -46,6 +46,16 @@ export const getExperiencesDetails = async (req, res) => {
       where: {
         id: experienceId,
       },
+      include:{
+        slots: {
+            select:{
+                experienceId:true,
+                date: true,
+                avaliableSlots: true,
+                totalSlots: true,
+            }
+        }
+    }
     });
 
     if (!result)
@@ -59,7 +69,7 @@ export const getExperiencesDetails = async (req, res) => {
     });
   } catch (error) {
     console.error(
-      "Server Side Error fetching Experience Details",
+      "Server Side Error fetching Experience Details: ",
       error.message
     );
     return res

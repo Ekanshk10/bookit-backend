@@ -40,6 +40,8 @@ model Slot{
   experienceId Int
   experience Experience @relation(references: [id], fields: [experienceId])
   date DateTime
+  avaliableSlots Int
+  totalSlots Int @default(10)
   booking Booking[]
   createdAt DateTime @default(now())
 }
@@ -63,6 +65,8 @@ model Booking{
   promoCode PromoCode? @relation(references: [id], fields: [promoCodeId])
   finalPrice Float
   bookingDate DateTime @default(now())
+
+  @@unique([userId, slotId])
 
 }
 
