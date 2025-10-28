@@ -16,7 +16,6 @@ export const getExperiences = async (req, res) => {
 
     if (result.length > 0) {
       return res.status(200).json({
-        success: true,
         message: "All the Experinces retrived successfully",
         data: result,
       });
@@ -24,12 +23,12 @@ export const getExperiences = async (req, res) => {
 
     res
       .status(404)
-      .json({ success: false, message: "No Experiences found", data: [] });
+      .json({message: "No Experiences found", data: [] });
   } catch (error) {
     console.error("Server Side Error fetching experiences", error);
     return res
       .status(500)
-      .json({ success: false, message: "Error retrieving experiences." });
+      .json({message: "Error retrieving experiences." });
   }
 };
 
@@ -40,7 +39,7 @@ export const getExperiencesDetails = async (req, res) => {
     if (isNaN(experienceId) || !experienceId) {
       return res
         .status(404)
-        .json({ success: false, message: "Experince Id is missing or Invalid" });
+        .json({message: "Experince Id is missing or Invalid" });
     }
 
     const result = await prisma.experience.findUnique({
@@ -52,10 +51,9 @@ export const getExperiencesDetails = async (req, res) => {
     if (!result)
       return res
         .status(404)
-        .json({ success: false, message: "Experience Details not found", data: [] });
+        .json({message: "Experience Details not found", data: [] });
 
     return res.status(200).json({
-      success: true,
       message: "Experience data retrived successfully",
       data: result,
     });
@@ -66,6 +64,6 @@ export const getExperiencesDetails = async (req, res) => {
     );
     return res
       .status(500)
-      .json({ success: false, message: "Error retriving Experience Details" });
+      .json({ message: "Error retriving Experience Details" });
   }
 };

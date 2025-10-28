@@ -39,9 +39,7 @@ model Slot{
   id Int @id @default(autoincrement())
   experienceId Int
   experience Experience @relation(references: [id], fields: [experienceId])
-  bookedCount Int
   date DateTime
-  capacity Int
   booking Booking[]
   createdAt DateTime @default(now())
 }
