@@ -51,12 +51,11 @@ export const createBooking = async (req, res) => {
         });
       }
 
-      const dateTimeString = `${bookingDate} ${slotTime}`;
-      const parsedDate = parse(
-        dateTimeString,
-        "yyyy-MM-dd hh:mm a",
-        new Date()
-      );
+      const parsedDate = new Date(slotTime);
+
+      if (isNaN(parsedDate)) {
+        throw new Error("Invalid slotTime format received");
+      }
 
       console.log(parsedDate);
 

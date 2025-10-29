@@ -32,6 +32,7 @@ export const getExperiences = async (req, res) => {
   }
 };
 
+
 export const getExperiencesDetails = async (req, res) => {
   try {
     const experienceId = parseInt(req.params.id);
