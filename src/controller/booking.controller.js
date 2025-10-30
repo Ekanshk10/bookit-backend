@@ -100,6 +100,7 @@ export const createBooking = async (req, res) => {
         data: { avaliableSlots: { decrement: quantity } },
       });
 
+
       return booking;
     });
 
