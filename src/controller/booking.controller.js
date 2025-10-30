@@ -11,12 +11,11 @@ export const createBooking = async (req, res) => {
       finalPrice,
       exprienceId,
       slotTime,
-    } = req.body;
+    } = req.body.data;
 
     if (
       !name ||
       !email ||
-      !codeId ||
       !bookingDate ||
       !finalPrice ||
       !exprienceId ||
@@ -51,13 +50,7 @@ export const createBooking = async (req, res) => {
         });
       }
 
-      const parsedDate = new Date(slotTime);
-
-      if (isNaN(parsedDate)) {
-        throw new Error("Invalid slotTime format received");
-      }
-
-      console.log(parsedDate);
+      const parsedDate = new Date(slotTime).toISOString();
 
       let slot = await tx.slot.findFirst({
         where: {
@@ -114,10 +107,21 @@ export const createBooking = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+
+    if (
+      error.message === "You already booked this slot" ||
+      error.message === "No available slots left for this time"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    // ✅ For any unexpected error
+    return res.status(500).json({
       success: false,
-      msg: "Something went wrong",
-      error: error.message,
+      message: "Something went wrong, please try again later",
     });
   }
 };

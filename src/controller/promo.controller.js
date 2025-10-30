@@ -36,7 +36,7 @@ export const promoValidate = async (req, res) => {
 
     if (!code || !bookingValue)
       return res.status(400).json({
-        msg: "Promo code and booking value are required",
+        message: "Promo code and booking value are required",
       });
 
     const sanitaizedCode = code.trim().toUpperCase();
@@ -58,25 +58,25 @@ export const promoValidate = async (req, res) => {
     });
 
      if (!isCodeAvailiable) {
-      return res.status(404).json({msg: "Invalid promo code" });
+      return res.status(404).json({message: "Invalid promo code" });
     }
     if (
       isCodeAvailiable.expiryDate &&
       isCodeAvailiable.expiryDate < new Date()
     ) {
-      return res.status(400).json({ msg: "Promo code has expired" });
+      return res.status(400).json({ message: "Promo code has expired" });
     }
 
     if (bookingValue < isCodeAvailiable.minBookingValue) {
       return res.status(400).json({
-        msg: `Minimum booking value must be ₹${isCodeAvailiable.minBookingValue}`,
+        message: `Minimum booking value must be ₹${isCodeAvailiable.minBookingValue}`,
       });
     }
 
     if (isCodeAvailiable.usageLimit && isCodeAvailiable.usedCount >= isCodeAvailiable.usageLimit) {
       return res.status(400).json({
         success: false,
-        msg: "Promo code usage limit reached",
+        message: "Promo code usage limit reached",
       });
     }
 
@@ -92,11 +92,12 @@ export const promoValidate = async (req, res) => {
     const effectiveDiscount = Math.min(discount, bookingValue);
     
     return res.status(200).json({
-      msg: "Promo code applied successfully",
+      message: "Promo code applied successfully",
       data: {
+        codeId: isCodeAvailiable.id,
         code: isCodeAvailiable.code,
         discountType: isCodeAvailiable.discountType,
-        discountValue: isCodeAvailiable.value,
+        discountValue: isCodeAvailiable.amount,
         discount: effectiveDiscount,
         finalPrice: finalPrice.toFixed(2),
       },
