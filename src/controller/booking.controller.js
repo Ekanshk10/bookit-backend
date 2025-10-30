@@ -11,6 +11,7 @@ export const createBooking = async (req, res) => {
       finalPrice,
       exprienceId,
       slotTime,
+      quantity,
     } = req.body.data;
 
     if (
@@ -96,7 +97,7 @@ export const createBooking = async (req, res) => {
 
       await tx.slot.update({
         where: { id: slot.id },
-        data: { avaliableSlots: { decrement: 1 } },
+        data: { avaliableSlots: { decrement: quantity } },
       });
 
       return booking;
