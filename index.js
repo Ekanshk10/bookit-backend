@@ -14,7 +14,7 @@ app.use("/api", experienceRoute);
 app.use("/api", bookingRoute);
 app.use("/api", promoRoute);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 1002;
 
 const startServer = async () => {
   try {
