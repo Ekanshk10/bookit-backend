@@ -50,7 +50,9 @@ export const createBooking = async (req, res) => {
         });
       }
 
+      console.log("slottime: ", slotTime)
       const parsedDate = new Date(slotTime).toISOString();
+      console.log("parseddate: ",parsedDate);
 
       let slot = await tx.slot.findFirst({
         where: {
@@ -107,7 +109,6 @@ export const createBooking = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
     if (
       error.message === "You already booked this slot" ||
       error.message === "No available slots left for this time"
@@ -117,8 +118,6 @@ export const createBooking = async (req, res) => {
         message: error.message,
       });
     }
-
-    // ✅ For any unexpected error
     return res.status(500).json({
       success: false,
       message: "Something went wrong, please try again later",
