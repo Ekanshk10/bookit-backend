@@ -62,7 +62,7 @@ export const getExperiencesDetails = async (req, res) => {
         .status(404)
         .json({ message: "Experience Details not found", data: [] });
 
-    console.log(result);
+    console.log("original: ",result);
 
     const convertDateToIst = (dateString) => {
       const date = new Date(dateString);
@@ -78,9 +78,10 @@ export const getExperiencesDetails = async (req, res) => {
       })),
     };
 
+    console.log("formated: ",formattedResult)
     return res.status(200).json({
       message: "Experience data retrived successfully",
-      data: formattedResult,
+      data: result,
     });
   } catch (error) {
     console.error(
