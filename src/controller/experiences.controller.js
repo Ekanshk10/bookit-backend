@@ -21,17 +21,12 @@ export const getExperiences = async (req, res) => {
       });
     }
 
-    res
-      .status(404)
-      .json({message: "No Experiences found", data: [] });
+    res.status(404).json({ message: "No Experiences found", data: [] });
   } catch (error) {
     console.error("Server Side Error fetching experiences: ", error.message);
-    return res
-      .status(500)
-      .json({message: "Error retrieving experiences." });
+    return res.status(500).json({ message: "Error retrieving experiences." });
   }
 };
-
 
 export const getExperiencesDetails = async (req, res) => {
   try {
@@ -40,33 +35,52 @@ export const getExperiencesDetails = async (req, res) => {
     if (isNaN(experienceId) || !experienceId) {
       return res
         .status(404)
-        .json({message: "Experince Id is missing or Invalid" });
+        .json({ message: "Experince Id is missing or Invalid" });
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Sets to midnight local time
 
     const result = await prisma.experience.findUnique({
       where: {
         id: experienceId,
       },
-      include:{
+      include: {
         slots: {
-            select:{
-                experienceId:true,
-                date: true,
-                avaliableSlots: true,
-                totalSlots: true,
-            }
-        }
-    }
+          select: {
+            experienceId: true,
+            date: true,
+            avaliableSlots: true,
+            totalSlots: true,
+          },
+        },
+      },
     });
 
     if (!result)
       return res
         .status(404)
-        .json({message: "Experience Details not found", data: [] });
+        .json({ message: "Experience Details not found", data: [] });
+
+    console.log(result);
+
+    const convertDateToIst = (dateString) => {
+      const date = new Date(dateString);
+      const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000); // add +5:30
+      return istDate.toISOString().replace("Z", "+05:30");
+    };
+
+    const formattedResult = {
+      ...result,
+      slots: result.slots.map((slot) => ({
+        ...slot,
+        date: convertDateToIst(slot.date),
+      })),
+    };
 
     return res.status(200).json({
       message: "Experience data retrived successfully",
-      data: result,
+      data: formattedResult,
     });
   } catch (error) {
     console.error(
