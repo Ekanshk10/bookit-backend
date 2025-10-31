@@ -28,6 +28,7 @@ model Experience {
   state       String
   description String
   price       Float
+  about       String @default("")
   imageUrl    String
   slots       Slot[]
   createdAt   DateTime @default(now())
