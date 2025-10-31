@@ -37,14 +37,15 @@ model Experience {
 }
 
 model Slot {
-  id             Int       @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   experienceId   Int
-  experience     Experience @relation(references: [id], fields: [experienceId],  onDelete: Cascade, onUpdate: Cascade)
+  experience     Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade, onUpdate: Cascade)
   date           DateTime
+  time           String
   avaliableSlots Int
-  totalSlots     Int       @default(10)
+  totalSlots     Int        @default(10)
   booking        Booking[]
-  createdAt      DateTime  @default(now())
+  createdAt      DateTime   @default(now())
 }
 
 model PromoCode {
@@ -62,11 +63,11 @@ model PromoCode {
 model Booking {
   id          Int        @id @default(autoincrement())
   slotId      Int
-  slot        Slot       @relation(references: [id], fields: [slotId],   onDelete: Cascade,onUpdate: Cascade)
+  slot        Slot       @relation(references: [id], fields: [slotId], onDelete: Cascade, onUpdate: Cascade)
   userId      Int
-  user        User       @relation(references: [id], fields: [userId],   onDelete: Cascade, onUpdate: Cascade)
+  user        User       @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
   promoCodeId Int?
-  promoCode   PromoCode? @relation(references: [id], fields: [promoCodeId],   onDelete: SetNull, onUpdate: Cascade)
+  promoCode   PromoCode? @relation(references: [id], fields: [promoCodeId], onDelete: SetNull, onUpdate: Cascade)
   finalPrice  Float
   bookingDate DateTime   @default(now())
 

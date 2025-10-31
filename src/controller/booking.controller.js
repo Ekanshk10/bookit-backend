@@ -11,6 +11,7 @@ export const createBooking = async (req, res) => {
       finalPrice,
       exprienceId,
       slotTime,
+      slotDate,
       quantity,
     } = req.body.data;
 
@@ -20,14 +21,16 @@ export const createBooking = async (req, res) => {
       !bookingDate ||
       !finalPrice ||
       !exprienceId ||
-      !slotTime
+      !slotTime ||
+      !slotDate
     )
       return res.status(404).json({ message: "Booking data is incomplete" });
 
     const nameRegex = /^[A-Za-z\s]{2,}$/;
     if (!nameRegex.test(name.trim())) {
       return res.status(400).json({
-        message: "Name should contain only letters and spaces (min 2 characters)",
+        message:
+          "Name should contain only letters and spaces (min 2 characters)",
       });
     }
 
@@ -51,15 +54,18 @@ export const createBooking = async (req, res) => {
         });
       }
 
-      console.log("slottime: ", slotTime)
-      const parsedDate = new Date(slotTime).toISOString();
-      
-      console.log("parseddate: ",parsedDate);
+      console.log("slottime: ", slotTime);
+
+      const parsedDate = new Date(slotDate);
+      console.log("slotDate input:", slotDate, typeof slotDate);
+      console.log("parsedDate:", parsedDate);
+      console.log("slotTime:", slotTime);
 
       let slot = await tx.slot.findFirst({
         where: {
           experienceId: exprienceId,
           date: parsedDate,
+          time: slotTime,
         },
       });
 
@@ -68,6 +74,7 @@ export const createBooking = async (req, res) => {
           data: {
             experienceId: exprienceId,
             date: parsedDate,
+            time: slotTime,
             avaliableSlots: 10,
           },
         });
@@ -100,7 +107,6 @@ export const createBooking = async (req, res) => {
         where: { id: slot.id },
         data: { avaliableSlots: { decrement: quantity } },
       });
-
 
       return booking;
     });

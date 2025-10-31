@@ -50,6 +50,7 @@ export const getExperiencesDetails = async (req, res) => {
           select: {
             experienceId: true,
             date: true,
+            time: true,
             avaliableSlots: true,
             totalSlots: true,
           },
@@ -62,23 +63,8 @@ export const getExperiencesDetails = async (req, res) => {
         .status(404)
         .json({ message: "Experience Details not found", data: [] });
 
-    console.log("original: ",result);
+    console.log("original: ", result);
 
-    const convertDateToIst = (dateString) => {
-      const date = new Date(dateString);
-      const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000); // add +5:30
-      return istDate.toISOString().replace("Z", "+05:30");
-    };
-
-    const formattedResult = {
-      ...result,
-      slots: result.slots.map((slot) => ({
-        ...slot,
-        date: convertDateToIst(slot.date),
-      })),
-    };
-
-    console.log("formated: ",formattedResult)
     return res.status(200).json({
       message: "Experience data retrived successfully",
       data: result,
