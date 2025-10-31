@@ -5,8 +5,8 @@ export const getExperiences = async (req, res) => {
     const result = await prisma.experience.findMany({
       select: {
         id: true,
+        experienceName: true,
         location: true,
-        state: true,
         description: true,
         price: true,
         imageUrl: true,

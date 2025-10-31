@@ -23,15 +23,17 @@ model User {
 }
 
 model Experience {
-  id          Int      @id @default(autoincrement())
-  location    String   @unique
-  state       String
-  description String
-  price       Float
-  about       String @default("")
-  imageUrl    String
-  slots       Slot[]
-  createdAt   DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  experienceName String
+  location       String
+  description    String
+  price          Float
+  about          String   @default("")
+  imageUrl       String
+  slots          Slot[]
+  createdAt      DateTime @default(now())
+
+  @@unique([experienceName, location])
 }
 
 model Slot {
