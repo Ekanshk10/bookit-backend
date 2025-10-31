@@ -27,14 +27,14 @@ export const createBooking = async (req, res) => {
     const nameRegex = /^[A-Za-z\s]{2,}$/;
     if (!nameRegex.test(name.trim())) {
       return res.status(400).json({
-        msg: "Name should contain only letters and spaces (min 2 characters)",
+        message: "Name should contain only letters and spaces (min 2 characters)",
       });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       return res.status(400).json({
-        msg: "Please enter a valid email address",
+        message: "Please enter a valid email address",
       });
     }
     // Created Tracsactoin to manage slots and user registration to the database
@@ -53,6 +53,7 @@ export const createBooking = async (req, res) => {
 
       console.log("slottime: ", slotTime)
       const parsedDate = new Date(slotTime).toISOString();
+      
       console.log("parseddate: ",parsedDate);
 
       let slot = await tx.slot.findFirst({
